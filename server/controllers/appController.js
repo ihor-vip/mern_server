@@ -134,7 +134,25 @@ export async function getUser(req,res){
 
 
 export async function updateUser(req,res){
-  res.json('updateUser route')
+    try {
+        const { userId } = req.user;
+
+        if(userId){
+            const body = req.body;
+
+            UserModel.updateOne({ _id : userId }, body, function(err, data){
+                if(err) throw err;
+
+                return res.status(201).send({ msg : "Record Updated...!"});
+            })
+
+        }else{
+            return res.status(401).send({ error : "User Not Found...!"});
+        }
+
+    } catch (error) {
+        return res.status(401).send({ error });
+    }
 }
 
 export async function generateOTP(req,res){
